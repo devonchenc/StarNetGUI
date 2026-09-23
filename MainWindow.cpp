@@ -18,6 +18,7 @@
 #include <QDesktopServices>
 #include <QSettings>
 
+#include "FilePathLineEdit.h"
 #include "StarNetRunner.h"
 
 MainWindow::MainWindow(QWidget* parent)
@@ -143,8 +144,16 @@ void MainWindow::setupUI()
     QLabel* inputTitle = new QLabel("Input Image:", centralWidget);
     inputTitle->setMinimumWidth(100);
 
-    _inputEdit = new QLineEdit(centralWidget);
+    _inputEdit = new CFilePathLineEdit(centralWidget);
     _inputEdit->setPlaceholderText("Select input image...");
+    connect(_inputEdit, &QLineEdit::textChanged, this, [this](const QString& text)
+        {
+            // Generate default output filename
+            const QFileInfo fileInfo(text);
+            _starlessOutputEdit->setText(fileInfo.path() + "/" + fileInfo.completeBaseName() + "_starless." + fileInfo.suffix());
+            _maskOutputEdit->setText(fileInfo.path() + "/" + fileInfo.completeBaseName() + "_mask." + fileInfo.suffix());
+            _starsOutputEdit->setText(fileInfo.path() + "/" + fileInfo.completeBaseName() + "_stars." + fileInfo.suffix());
+        });
 
     QPushButton* inputBrowseButton = new QPushButton("", centralWidget);
     inputBrowseButton->setFixedWidth(45);
@@ -173,12 +182,6 @@ void MainWindow::setupUI()
                 return;
 
             _inputEdit->setText(fileName);
-
-            // Generate default output filename
-            const QFileInfo fileInfo(fileName);
-            _starlessOutputEdit->setText(fileInfo.path() + "/" + fileInfo.completeBaseName() + "_starless." + fileInfo.suffix());
-            _maskOutputEdit->setText(fileInfo.path() + "/" + fileInfo.completeBaseName() + "_mask." + fileInfo.suffix());
-            _starsOutputEdit->setText(fileInfo.path() + "/" + fileInfo.completeBaseName() + "_stars." + fileInfo.suffix());
         });
 
     // ============================================================

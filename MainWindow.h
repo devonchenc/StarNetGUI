@@ -11,6 +11,7 @@ class QProgressBar;
 class QPlainTextEdit;
 class QLabel;
 class QPushButton;
+class CFilePathLineEdit;
 
 class MainWindow : public QMainWindow
 {
@@ -28,7 +29,7 @@ private:
     QSettings settings() const;
 
 private:
-    QLineEdit* _inputEdit{ nullptr };
+    CFilePathLineEdit* _inputEdit{ nullptr };
     QLineEdit* _starlessOutputEdit{ nullptr };
     QLineEdit* _maskOutputEdit{ nullptr };
     QLineEdit* _starsOutputEdit{ nullptr };
